@@ -6,8 +6,9 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.4/dist/cosmo/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.52/lib/codemirror.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.52/theme/idea.css">
 
 	<title>HTML to Markdown</title>
 </head>
@@ -18,7 +19,7 @@
 	</nav>
 
 	<textarea id="editor"></textarea>
-	<pre id="markdown" class="m-3" style="white-space:pre-wrap;"></section>
+	<textarea id="markdown"></textarea>
 
 	<script src="https://cdn.jsdelivr.net/npm/jquery@3.4/dist/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16/dist/umd/popper.min.js"></script>
@@ -26,6 +27,8 @@
 	<script src="https://cdn.jsdelivr.net/npm/ckeditor@4.12/ckeditor.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/turndown@5.0/dist/turndown.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/turndown-plugin-gfm@1.0/dist/turndown-plugin-gfm.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/codemirror@5.52/lib/codemirror.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/codemirror@5.52/mode/markdown/markdown.js"></script>
 	<script>
 		(function () {
 			"use strict";
@@ -34,12 +37,20 @@
 				Bundle = {};
 
 			DOM.editor = CKEDITOR.replace("editor");
-			DOM.markdown = jQuery("#markdown");
+			DOM.markdown = CodeMirror.fromTextArea(document.getElementById("markdown"), {
+				theme: "idea",
+				mode: { name: "markdown" },
+				lineNumbers: true,
+				lineWrapping: true
+			});
+			DOM.markdown.setSize("100%", "auto")
 
 			Bundle.turndownService = new TurndownService({
 				headingStyle: "atx",
 				hr: "---",
-				bulletListMarker: "-"
+				emDelimiter: "*",
+				bulletListMarker: "*",
+				codeBlockStyle: "fenced"
 			});
 			Bundle.turndownService.use(turndownPluginGfm.gfm);
 
@@ -47,7 +58,7 @@
 				let html = DOM.editor.getData();
 				let markdown = Bundle.turndownService.turndown(html);
 
-				DOM.markdown.text(markdown);
+				DOM.markdown.setValue(markdown);
 			}
 
 			jQuery(function () {
