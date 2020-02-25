@@ -36,7 +36,24 @@
 			let DOM = {},
 				Bundle = {};
 
-			DOM.editor = CKEDITOR.replace("editor");
+			DOM.editor = CKEDITOR.replace("editor", {
+				format_tags: "p;h1;h2;h3;h4;h5;h6",
+				stylesSet: [
+					{ name: "Code", element: "code" },
+					{ name: "Pre", element: "pre" }
+				],
+				toolbar: [[
+					"Undo", "Redo", "-",
+					"Cut", "Copy", "Paste", "PasteText", "PasteFromWord", "-",
+					"Format", "Styles", "Bold", "Italic", "Strike", "-", "RemoveFormat", "-",
+					"BulletedList", "NumberedList", "Indent", "Outdent", "-",
+					"Link", "Unlink", "-",
+					"Image", "Table", "SpecialChar", "Blockquote", "HorizontalRule", "-",
+					"Source", "-",
+					"Maximize", "About"
+				]],
+				height: 300
+			});
 			DOM.markdown = CodeMirror.fromTextArea(document.getElementById("markdown"), {
 				theme: "idea",
 				mode: { name: "markdown" },
